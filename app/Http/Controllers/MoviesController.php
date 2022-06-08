@@ -77,10 +77,20 @@ class MoviesController extends Controller
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()]);
         }
-        return response()->json([
-            'movie' => Movie::find($query->movieId),
-            'option' => 'get',
-            'status' => 'success'
-        ]);
+        if (Movie::find($query->movieId) != null) {
+            return response()->json([
+                'movieId' => Movie::find($query->movieId)::first()->id,
+                'movie' => Movie::find($query->movieId)::first()->movie,
+                'option' => 'get',
+                'status' => 'success'
+            ]);
+        } else {
+            return response()->json([
+                'movieId' => null,
+                'movie' => null,
+                'option' => 'get',
+                'status' => 'error'
+            ]);
+        }
     }
 }

@@ -77,10 +77,20 @@ class ReviewersController extends Controller
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()]);
         }
-        return response()->json([
-            'users' => Reviewer::find($query->userId),
-            'option' => 'get',
-            'status' => 'success'
-        ]);
+        if (Reviewer::find($query->userId) != null) {
+            return response()->json([
+                'userId' => Reviewer::find($query->userId)::first()->id,
+                'username' => Reviewer::find($query->userId)::first()->username,
+                'option' => 'get',
+                'status' => 'success'
+            ]);
+        } else {
+            return response()->json([
+                'userId' => null,
+                'username' => null,
+                'option' => 'get',
+                'status' => 'error'
+            ]);
+        }
     }
 }

@@ -10,6 +10,7 @@ use App\Http\Requests\InsertReviewRequest;
 use App\Models\Review;
 use App\Models\Reviewer;
 use App\Models\Movie;
+use App\Models\User;
 use Exception;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -117,11 +118,35 @@ class ReviewsController extends Controller
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()]);
         }
-        return response()->json([
-            'review' => Review::find($query->reviewId),
-            'option' => 'get',
-            'status' => 'success'
-        ]);
+        if (Review::find($query->reviewId) != null) {
+            $review = Review::find($query->reviewId);
+            $movie = Movie::find($review->idMovie);
+            $user = User::find($review->idUser);
+
+            return response()->json([
+                'reviewId' => $review->id,
+                'userId' => $user->id,
+                'username' => $user->username,
+                'movieId' => $movie->id,
+                'movie' => $movie->movie,
+                'review' => $review->review,
+                'rating' => $review->rating,
+                'option' => 'get',
+                'status' => 'success'
+            ]);
+        } else {
+            return response()->json([
+                'reviewId' => null,
+                'userId' => null,
+                'username' => null,
+                'movieId' => null,
+                'movie' => null,
+                'review' => null,
+                'rating' => null,
+                'option' => 'get',
+                'status' => 'error'
+            ]);
+        }
     }
 
     public function getAverageRatingMovie(GetMovieRequest $query)
@@ -131,14 +156,19 @@ class ReviewsController extends Controller
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()]);
         }
+        $movie = Movie::find($query->movieId);
         $movieReviews = Review::all()->where('idMovie', '==', $query->movieId);
+
         $totalRating = 0;
         $totalRatingsLength = 0;
+
         foreach($movieReviews as $review) {
             $totalRating += $review->rating;
             $totalRatingsLength++;
         }
         return response()->json([
+            'movieId' => $movie->id,
+            'movie' => $movie->movie,
             'averageMovieRating' => $totalRatingsLength > 0 ? $totalRating/$totalRatingsLength : 0,
             'option' => 'get',
             'status' => 'success'
@@ -152,14 +182,19 @@ class ReviewsController extends Controller
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()]);
         }
+        $user = User::find($query->userId);
         $userReviews = Review::all()->where('idUser', '==', $query->userId);
+
         $totalRating = 0;
         $totalRatingsLength = 0;
+
         foreach($userReviews as $review) {
             $totalRating += $review->rating;
             $totalRatingsLength++;
         }
         return response()->json([
+            'userId' => $user->id,
+            'username' => $user->username,
             'averageUserRating' => $totalRatingsLength > 0 ? $totalRating/$totalRatingsLength : 0,
             'option' => 'get',
             'status' => 'success'
