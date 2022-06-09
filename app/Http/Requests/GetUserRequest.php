@@ -24,7 +24,7 @@ class GetUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'userId'=>'required'
+            'userId'=>'required|numeric'
         ];
     }
 }

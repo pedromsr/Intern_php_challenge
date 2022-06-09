@@ -9,7 +9,7 @@ class UserController extends Controller
 {
     public function register(CreateUserRequest $request)
     {
-        if (User::all()->where('username', '==', $request->username)->first() == null) {
+        if (!User::where('username', $request->username)->first()) {
             $user = new User();
             $user->name = $request->name;
             $user->username = $request->username;
@@ -24,14 +24,13 @@ class UserController extends Controller
                 'option' => 'create',
                 'status' => 'success'
             ];
-        } else {
-            return [
-                'name' => null,
-                'username' => null,
-                'email' => null,
-                'option' => 'create',
-                'status' => 'error'
-            ];
         }
+        return [
+            'name' => null,
+            'username' => null,
+            'email' => null,
+            'option' => 'create',
+            'status' => 'error'
+        ];
     }
 }

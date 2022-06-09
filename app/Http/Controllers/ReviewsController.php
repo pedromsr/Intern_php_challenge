@@ -11,18 +11,11 @@ use App\Models\Review;
 use App\Models\Reviewer;
 use App\Models\Movie;
 use App\Models\User;
-use Exception;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ReviewsController extends Controller
 {
     public function createReview(InsertReviewRequest $request)
     {
-        try {
-            JWTAuth::parseToken()->toUser();
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()]);
-        }
         $review = new Review([
             'idUser' => $request->userId,
             'idMovie' => $request->movieId,
@@ -30,7 +23,7 @@ class ReviewsController extends Controller
             'review' => $request->review
         ]);
 
-        if (Reviewer::find($review->idUser) != null && Movie::find($review->idMovie)) {
+        if (Reviewer::find($review->idUser) && Movie::find($review->idMovie)) {
             $user = Reviewer::find($review->idUser);
             $movie = Movie::find($review->idMovie);
             $review->save();
@@ -45,28 +38,22 @@ class ReviewsController extends Controller
                 'option'=> 'create',
                 'status'=> 'success'
             ]);
-        } else {
-            return response()->json([
-                'username' => null,
-                'userId' => null,
-                'movieId' => null,
-                'movie' => null,
-                'review' => null,
-                'rating' => null,
-                'option'=> 'create',
-                'status'=> 'error'
-            ]);
         }
+        return response()->json([
+            'username' => null,
+            'userId' => null,
+            'movieId' => null,
+            'movie' => null,
+            'review' => null,
+            'rating' => null,
+            'option'=> 'create',
+            'status'=> 'error'
+        ]);
     }
 
     public function deleteReview(DeleteReviewRequest $request)
     {
-        try {
-            JWTAuth::parseToken()->toUser();
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()]);
-        }
-        if (Review::find($request->reviewId) != null) {
+        if (Review::find($request->reviewId)) {
             $review = Review::find($request->reviewId);
 
             $reviewText = $review->review;
@@ -87,37 +74,26 @@ class ReviewsController extends Controller
                 'option'=> 'delete',
                 'status'=> 'success'
             ]);
-        } else {
-            return response()->json([
-                'username' => null,
-                'userId' => null,
-                'movieId' => null,
-                'movie' => null,
-                'review' => null,
-                'rating' => null,
-                'option'=> 'delete',
-                'status'=> 'error'
-            ]);
         }
+        return response()->json([
+            'username' => null,
+            'userId' => null,
+            'movieId' => null,
+            'movie' => null,
+            'review' => null,
+            'rating' => null,
+            'option'=> 'delete',
+            'status'=> 'error'
+        ]);
     }
 
     public function getAllReviews()
     {
-        try {
-            JWTAuth::parseToken()->toUser();
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()]);
-        }
         return response()->json(Review::all());
     }
 
     public function getReview(GetReviewRequest $query)
     {
-        try {
-            JWTAuth::parseToken()->toUser();
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()]);
-        }
         if (Review::find($query->reviewId) != null) {
             $review = Review::find($query->reviewId);
             $movie = Movie::find($review->idMovie);
@@ -134,30 +110,24 @@ class ReviewsController extends Controller
                 'option' => 'get',
                 'status' => 'success'
             ]);
-        } else {
-            return response()->json([
-                'reviewId' => null,
-                'userId' => null,
-                'username' => null,
-                'movieId' => null,
-                'movie' => null,
-                'review' => null,
-                'rating' => null,
-                'option' => 'get',
-                'status' => 'error'
-            ]);
         }
+        return response()->json([
+            'reviewId' => null,
+            'userId' => null,
+            'username' => null,
+            'movieId' => null,
+            'movie' => null,
+            'review' => null,
+            'rating' => null,
+            'option' => 'get',
+            'status' => 'error'
+        ]);
     }
 
     public function getAverageRatingMovie(GetMovieRequest $query)
     {
-        try {
-            JWTAuth::parseToken()->toUser();
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()]);
-        }
         $movie = Movie::find($query->movieId);
-        $movieReviews = Review::all()->where('idMovie', '==', $query->movieId);
+        $movieReviews = Review::all()->where('idMovie', $query->movieId);
 
         $totalRating = 0;
         $totalRatingsLength = 0;
@@ -177,13 +147,8 @@ class ReviewsController extends Controller
 
     public function getAverageRatingUser(GetUserRequest $query)
     {
-        try {
-            JWTAuth::parseToken()->toUser();
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()]);
-        }
         $user = User::find($query->userId);
-        $userReviews = Review::all()->where('idUser', '==', $query->userId);
+        $userReviews = Review::all()->where('idUser', $query->userId);
 
         $totalRating = 0;
         $totalRatingsLength = 0;

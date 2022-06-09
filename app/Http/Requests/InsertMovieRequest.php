@@ -24,7 +24,7 @@ class InsertMovieRequest extends FormRequest
     public function rules()
     {
         return [
-            'movie'=>'required|min:1|max:255'
+            'movie'=>'required|string|min:1|max:255'
         ];
     }
 }

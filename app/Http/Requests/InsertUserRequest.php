@@ -24,7 +24,7 @@ class InsertUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'username'=>'required|min:1|max:20'
+            'username'=>'required|string|min:1|max:20'
         ];
     }
 }

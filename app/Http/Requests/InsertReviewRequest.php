@@ -23,11 +23,12 @@ class InsertReviewRequest extends FormRequest
      */
     public function rules()
     {
+        $requiredNumeric = 'required|numeric';
         return [
-            'userId'=>'required',
-            'movieId'=>'required',
-            'rating'=>'required',
-            'review'=>'required|min:1|max:255'
+            'userId'=>$requiredNumeric,
+            'movieId'=>$requiredNumeric,
+            'rating'=>$requiredNumeric,
+            'review'=>'required|string|min:1|max:255'
         ];
     }
 }

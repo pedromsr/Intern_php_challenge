@@ -24,7 +24,7 @@ class DeleteReviewRequest extends FormRequest
     public function rules()
     {
         return [
-            'reviewId'=>'required'
+            'reviewId'=>'required|numeric'
         ];
     }
 }

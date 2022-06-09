@@ -6,6 +6,7 @@ use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\MoviesController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Middleware\EnsureTokenIsValid;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,22 +31,22 @@ Route::group([
     Route::post('me', [AuthController::class, 'me']);
 });
 
-Route::post('/insertUser', [ReviewersController::class, 'insertUser']);
-Route::post('/deleteUser', [ReviewersController::class, 'deleteUser']);
+Route::post('/insertUser', [ReviewersController::class, 'insertUser'])->middleware(EnsureTokenIsValid::class);
+Route::post('/deleteUser', [ReviewersController::class, 'deleteUser'])->middleware(EnsureTokenIsValid::class);
 
-Route::post('/insertMovie', [MoviesController::class, 'insertMovie']);
-Route::post('/deleteMovie', [MoviesController::class, 'deleteMovie']);
+Route::post('/insertMovie', [MoviesController::class, 'insertMovie'])->middleware(EnsureTokenIsValid::class);
+Route::post('/deleteMovie', [MoviesController::class, 'deleteMovie'])->middleware(EnsureTokenIsValid::class);
 
-Route::post('/createReview', [ReviewsController::class, 'createReview']);
-Route::post('/deleteReview', [ReviewsController::class, 'deleteReview']);
+Route::post('/createReview', [ReviewsController::class, 'createReview'])->middleware(EnsureTokenIsValid::class);
+Route::post('/deleteReview', [ReviewsController::class, 'deleteReview'])->middleware(EnsureTokenIsValid::class);
 
-Route::get('/getAllUsers', [ReviewersController::class, 'getAllUsers']);
-Route::get('/getAllMovies', [MoviesController::class, 'getAllMovies']);
-Route::get('/getAllReviews', [ReviewsController::class, 'getAllReviews']);
+Route::get('/getAllUsers', [ReviewersController::class, 'getAllUsers'])->middleware(EnsureTokenIsValid::class);
+Route::get('/getAllMovies', [MoviesController::class, 'getAllMovies'])->middleware(EnsureTokenIsValid::class);
+Route::get('/getAllReviews', [ReviewsController::class, 'getAllReviews'])->middleware(EnsureTokenIsValid::class);
 
-Route::get('/getUser', [ReviewersController::class, 'getUser']);
-Route::get('/getMovie', [MoviesController::class, 'getMovie']);
-Route::get('/getReview', [ReviewsController::class, 'getReview']);
+Route::get('/getUser', [ReviewersController::class, 'getUser'])->middleware(EnsureTokenIsValid::class);
+Route::get('/getMovie', [MoviesController::class, 'getMovie'])->middleware(EnsureTokenIsValid::class);
+Route::get('/getReview', [ReviewsController::class, 'getReview'])->middleware(EnsureTokenIsValid::class);
 
-Route::get('/getAverageRatingMovie', [ReviewsController::class, 'getAverageRatingMovie']);
-Route::get('/getAverageRatingUser', [ReviewsController::class, 'getAverageRatingUser']);
+Route::get('/getAverageRatingMovie', [ReviewsController::class, 'getAverageRatingMovie'])->middleware(EnsureTokenIsValid::class);
+Route::get('/getAverageRatingUser', [ReviewsController::class, 'getAverageRatingUser'])->middleware(EnsureTokenIsValid::class);

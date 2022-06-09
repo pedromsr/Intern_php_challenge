@@ -24,7 +24,7 @@ class GetMovieRequest extends FormRequest
     public function rules()
     {
         return [
-            'movieId'=>'required'
+            'movieId'=>'required|numeric'
         ];
     }
 }
